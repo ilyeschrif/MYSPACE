@@ -1,0 +1,48 @@
+.footer {
+    background-color: #D7D7D7; 
+    color: white;
+    text-align: center;
+    padding: 0.5 px; 
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height:10% ;
+    transition: background-color 0.5s;
+  }
+  
+  .footer:hover {
+    background-color: #FF8C00; 
+  }
+  
+
+  
+  .footer .project-name {
+    font-size: 1em; 
+  }
+  
+  .footer .highlight {
+    font-family: 'Your Fancy Font', sans-serif; 
+  }
+
+  .footer {
+    display: flex;
+    align-items: center; /* Align items vertically in center */
+    justify-content: center; /* Align items horizontally in center */
+}
+
+.logo-and-text {
+    margin-right: 2em;
+    display: flex;
+    align-items: center; /* Align items vertically in center */
+}
+
+.project-name {
+    margin-right: 1em; /* Adjust margin as needed */
+}
+
+.fod-text {
+    /* Additional styles for Freedom Of Dev Services (FOD) text */
+}
+
+
+

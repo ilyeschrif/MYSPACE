@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Toolbar, Box } from "@mui/material";
 import LogoutButton from "./LogoutButton";
-import './Header.css';
+import '../assets/css/Header.css';
 
 const Header = () => {
   const [keycloak] = useState(null);
 
   return (
     <React.Fragment>
-      <Toolbar style={{ backgroundColor: "#d7d7d7" }}> {/* Brighter color */}
+      <Toolbar style={{ backgroundColor: "#d7d7d7" }}>
         <Box
           sx={{
             display: "flex",
@@ -19,9 +19,9 @@ const Header = () => {
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <img 
-              src={require('./logofod.png')} 
+              src={require('../assets/img/logo.png')} 
               alt="logofod" 
-              style={{ maxWidth: "65px", maxHeight: "65px", marginRight: "5em" }} 
+              style={{ maxWidth: "150px", maxHeight: "150px", marginRight: "5em" }} 
             />
             <ul style={{ listStyleType: "none", padding: 0, margin: 0, display: "flex" }}>
               <li className="nav-link" style={{ marginRight: "2em" }}>

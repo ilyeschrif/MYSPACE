@@ -16,7 +16,6 @@ const AppHeader = () => {
       const keycloakInstance = Keycloak(keycloakInitOptions);
       try {
         await keycloakInstance.init({
-          onLoad: 'login-required',
           checkLoginIframe: true,
           pkceMethod: 'S256'
         });
@@ -31,7 +30,7 @@ const AppHeader = () => {
 
   const handleLogout = () => {
     if (keycloak) {
-      keycloak.logout({ redirectUri: 'http://localhost:3000/' });
+      keycloak.logout({ redirectUri: 'http://localhost:3000' });
     }
   };
 
