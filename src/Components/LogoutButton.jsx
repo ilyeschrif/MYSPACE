@@ -40,6 +40,7 @@ const AppHeader = () => {
       <button className="button" onClick= {handleLogout}  >Se Déconnecter</button>
 
     )
+
   );
 };
 

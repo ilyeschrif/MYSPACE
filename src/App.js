@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import "./App.css"
 import CellVisualisation from './Components/CellVisualisation.jsx';
@@ -29,11 +30,13 @@ async function sendDataToBackend(profile) {
 const keycloak = new Keycloak(keycloakInitOptions);
 console.log(keycloak)
 
+
 keycloak.init({
   onLoad: 'login-required',
   checkLoginIframe: true,
   pkceMethod: 'S256'
 }).then((authenticated) => {
+
 
   keycloak.loadUserProfile().then((profile) => {
     console.log("User Profile:", profile);
@@ -208,8 +211,8 @@ const App = () => {
   ]
 
 
-
   return (
+
     <div className="App">
       <Header />
       <div className='cell-container'>
@@ -224,8 +227,12 @@ const App = () => {
       </div>
       <Footer />
 
+
     </div>
   );
 };
 
+
 export default App
+
+
