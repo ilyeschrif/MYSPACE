@@ -1,0 +1,43 @@
+@import url('../constants.css');
+
+.footer {
+    background-color: var(--primary-bg-color); 
+    color: var(--text-color); 
+    text-align: center;
+    padding: 0.5px;
+    margin-top: 20em;    
+    height: 10%; 
+    transition: background-color 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+.footer:hover {
+    background-color: var(--secondary-bg-color);
+}
+
+.footer .project-name {
+    font-size: 1em;
+}
+
+.footer .highlight {
+    font-family: 'Your Fancy Font', sans-serif;
+}
+
+.logo-and-text {
+    margin-right: 2em;
+    display: flex;
+    align-items: center;
+}
+
+.project-name {
+    margin-right: 1em;
+}
+
+.logofod {
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 4em;
+}

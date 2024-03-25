@@ -1,2 +1,22 @@
+@import url('./assets/css/constants.css');
+
+body
+{
+    background-color: var(--custom-bg-color);
+}
 
 
+.Tab
+{
+    margin-top: 4em;
+    margin-left: 1em;
+    height:580px;
+    width: 1000px;
+    background-color: var(--tab-color);
+    border-radius: 10px;
+}
+
+.cell-container
+{
+    display: flex;
+}

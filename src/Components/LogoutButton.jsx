@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'primereact/button';
 import Keycloak from 'keycloak-js';
+import '../assets/css/LogoutButton.css';
+
 
 const keycloakInitOptions = {
   url: 'http://localhost:8080/',
-  realm: 'master',
+  realm: 'demo',
   clientId: 'react-client',
 };
 
@@ -36,18 +37,8 @@ const AppHeader = () => {
 
   return (
     keycloak && (
-      <Button
-        onClick={handleLogout}
-        className="m-1 custom-btn-style"
-        style={{ 
-          fontWeight: 'bold', 
-          backgroundColor: 'orange',
-          borderColor: 'orange',
-          width: '150px', 
-          height: '40px' 
-        }} 
-        label='Se&nbsp;déconnecter'
-      />
+      <button className="button" onClick= {handleLogout}  >Se Déconnecter</button>
+
     )
   );
 };

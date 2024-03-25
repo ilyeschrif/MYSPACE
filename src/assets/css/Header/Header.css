@@ -1,0 +1,73 @@
+@import url('../constants.css');
+
+.nav-link a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 17px;
+    transition: color 0.3s ease, border-bottom-color 2s ease;
+}
+
+.nav-link a:hover {
+    color: var(--secondary-bg-color);
+    border-bottom: 2px solid var(--secondary-bg-color);
+}
+
+.MuiToolbar-root{
+    background-color: var(--primary-bg-color);
+}
+
+.Header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.Header-image {
+    max-width: 140px;
+    max-height: 140px;
+    margin-right: 5em;
+}
+
+.Header-left {
+    display: flex;
+    align-items: center;
+}
+
+.Header-logo {
+    max-width: 140px;
+    max-height: 140px;
+    margin-right: 5em;
+}
+
+.Header-nav {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-link {
+    margin-right: 2em;
+}
+
+.Header-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+}
+
+.Header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+

@@ -1,84 +1,108 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const CellVisualisation = ({ width, height, data }) => {
-  const svgRef = useRef();
-
-  const colors = [
-    '#F4538A', // Base color 1
-    '#FAA300', // Base color 2
-    '#F9B721', '#F8C042', '#F7CD63', '#F6D784', '#F5E3A5', '#F4EEC6', '#F3F9E7', '#EEFAEF', '#E9F8EA', '#E4F6E5', '#DFF4E0', // Interpolated colors between base color 2 and base color 3
-    '#F5DD61', // Base color 3
-    '#91CCBB', '#88C6B3', '#7FBFAB', '#76B9A3', '#6DB29B', '#64AC93', '#5BA68B', '#52A083', '#499A7B', '#409474', '#379E6C', // Interpolated colors between base color 3 and base color 4
-
-  ]
-
-
+function CellVisualisation({ data, width, height }) {
+  const svgRef = useRef()
   useEffect(() => {
-    if (!svgRef.current || !data) return;
+    if (svgRef.current) {
+      const svgDom = svgRef.current;
 
-    const svg = d3.select(svgRef.current);
 
-    const circleSize = 30;
+      // Create the color scale.
+      const color = d3.scaleLinear()
+        .domain([0, 5])
+        .range(["hsla(27, 100%, 80%,0.9)", "hsla(27, 100%, 45%,1)"])
 
-    const updateChart = (newData) => {
-      const root = d3.hierarchy({ children: newData })
-        //.sum((d) => 50 + 20 * (d.children !== null ? d.children.length : 0))
-        .sum((d) => circleSize)
-        .sort((a, b) => b.value - a.value)
-      const pack = d3.pack()
+        .interpolate(d3.interpolateHcl);
+
+      // Compute the layout.
+      const pack = data => d3.pack()
         .size([width, height])
-        .padding(200); // Adjust padding here
+        .padding(40)
+        (d3.hierarchy(data)
+          .sum(_ => 1)
+          .sort((a, b) => b.value - a.value));
+      const root = pack(data);
 
-      const packedData = pack(root).descendants();
-
-      svg.selectAll('.circle').remove();
-      svg.selectAll('.text').remove();
-
-
-
-      packedData.forEach((d, i) => {
-        if (i === 0 || isNaN(d.x) || isNaN(d.y) || isNaN(d.r)) { return; }
-        svg.append('circle')
-          .attr('class', 'circle')
-          .attr('cx', d.x)
-          .attr('cy', d.y)
-          .attr('r', d.value)
-          .attr('fill', colors[i % colors.length]) // Use one of the predefined colors
-
-
-        svg.append('text') // Add text inside the circle
-          .attr("text-anchor", "middle")
-
+      // Create the SVG container.
+      const svg = d3.select(svgDom);
+      svg
+        .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+        .attr("style", `max-width: 100%; height: auto; display: block; cursor: pointer;`);
+   // Append the nodes.
+   function appendNode(svg) {
+    return svg.append("g") 
+    .selectAll("circle")
+      .data(root.descendants().slice(1))
+      .join("circle")
+      .attr("fill", d => d.children ? color(d.depth) : "#FFE5B4")
+      .on("mouseover", function () { d3.select(this).attr("stroke", "#000"); })
+      .on("mouseout", function () { d3.select(this).attr("stroke", null); })
+      .on("click", (event, d) =>d.children && focus !== d && (zoom(event, d), event.stopPropagation()));  
+  }
+  const node =appendNode(svg)
+      
+  // Append the text labels.
+   
+      const label = addLabels(svg)
+      function addLabels(svg) {
+        return svg.append("g")
           .style("font", "10px sans-serif")
-          .attr('x', d.x)
-          .attr('y', (d.children) ? d.y - d.r + (d.children.length) * 22 : d.y)
-          .attr('text-anchor', 'middle')
-          .attr('dy', '0.35em')
-          .text(`Cellule ${d.data.label.replace('Cell ', '')}`);
-      });
+          .attr("pointer-events", "none")
+          .attr("text-anchor", "middle")
+          .selectAll("text")
+          .data(root.descendants())
+          .join("text")
+          .style("fill-opacity", d => d.parent === root ? 1 : 0)
+          .style("display", d => d.parent === root ? "inline" : "none")
+          .text(d => d.data.label);
+      }
 
-    };
+      // Create the zoom behavior and zoom immediately in to the initial focus node.
+      svg.on("click", (event) => zoom(event, root));
+      let focus = root;
+      let view;
+      zoomTo([focus.x, focus.y, focus.r * 2]);
 
-    updateChart(data);
+      function zoomTo(v) {
+        const k = width / v[2];
 
-  }, [data, height, width]);
+        view = v;
 
+        label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+        node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+        node.attr("r", d => d.r * k);
+      }
+
+      function zoom(event, d) {
+
+        focus = d;
+
+        const transition = svg.transition()
+          .duration(event.altKey ? 7500 : 1000)
+          .tween("zoom", d => {
+            const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+            return t => zoomTo(i(t));
+          });
+
+        label
+          .filter(function (d) { return d.parent === focus || this.style.display === "inline"; })
+          .transition(transition)
+          .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+          .on("start", function (d) { if (d.parent === focus) this.style.display = "inline"; })
+          .on("end", function (d) { if (d.parent !== focus) this.style.display = "none"; });
+      }
+    }
+
+    return () => { cleanup(svgRef) }
+  }, [])
+
+  function cleanup(svgRef) {
+    if (!svgRef.current) return;
+    svgRef.current.querySelectorAll('*').forEach((n) => n.remove());
+  }
   return (
-    <svg ref={svgRef} width={width} height={height}>
-      {data.map((circle, index) => (
-        <circle
-          key={index}
-          className="circle"
-          cx={circle.x}
-          cy={circle.y}
-          r={circle.r}
-          fill={colors[index % colors.length]}
-        />
-      ))}
-    </svg>
+    <svg className="visualization" ref={svgRef} width={width} height={height}> </svg>
   );
-};
-
-export default CellVisualisation;
-
+}
+export default CellVisualisation
